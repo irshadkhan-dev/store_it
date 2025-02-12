@@ -6,8 +6,11 @@ import {
 } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { QueryClient } from "@tanstack/react-query";
-import appCss from "../styles/app.css?url";
-import { NotFound } from "../components/NotFound";
+import appCss from "@/styles/app.css?url";
+
+import { ClerkProvider } from "@clerk/tanstack-start";
+import { NotFound } from "@/components/NotFound";
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
     head: () => ({
@@ -45,15 +48,17 @@ function RootComponent() {
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html>
-      <head>
-        <Meta />
-      </head>
+    <ClerkProvider>
+      <html>
+        <head>
+          <Meta />
+        </head>
 
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
+        <body>
+          {children}
+          <Scripts />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
