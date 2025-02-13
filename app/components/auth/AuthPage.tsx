@@ -7,19 +7,20 @@ import OtpModal from "./OtpModal";
 import { Form, FormControl, FormField } from "../ui/form";
 import { useNavigate } from "@tanstack/react-router";
 import { useUser } from "@clerk/tanstack-start";
+import toast from "react-hot-toast";
 
 const AuthPage = () => {
   const [authType, setAuthType] = useState<AuthType>("sign-up");
-  const formSchema = getAuthSchema(authType!);
-  const { isLoaded, signUp, setActive } = useSignUp();
   const [isVerifying, setVerifying] = useState(false);
-  const [firstName, setFirstName] = useState("");
 
+  const { isLoaded, signUp, setActive } = useSignUp();
+  const router = useNavigate({ from: "/" });
+
+  const formSchema = getAuthSchema(authType!);
   const form = useForm<SignUp>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      firstName: "",
     },
   });
 
@@ -27,13 +28,20 @@ const AuthPage = () => {
     if (!isLoaded && !signUp) return null;
 
     try {
-      await signUp.create({
-        emailAddress: data.email,
-      });
-
-      await signUp.prepareEmailAddressVerification();
-      setFirstName(data.firstName);
-      setVerifying(true);
+      toast.promise(
+        async () => {
+          await signUp.create({
+            emailAddress: data.email,
+          });
+          await signUp.prepareEmailAddressVerification();
+          setVerifying(true);
+        },
+        {
+          loading: "Sending OTP...",
+          success: <b>OTP has been send</b>,
+          error: <b>Failed to send OTp</b>,
+        }
+      );
     } catch (error) {
       console.log("Error:", JSON.stringify(error, null, 2));
     }
@@ -41,20 +49,28 @@ const AuthPage = () => {
 
   const handleEmailVerification = async (code: string) => {
     if (!isLoaded && !signUp) return null;
-    const { user } = useUser();
-    const router = useNavigate({ from: "/" });
-    try {
-      const signUpAttempt = await signUp.attemptEmailAddressVerification({
-        code,
-      });
 
-      if (signUpAttempt.status === "complete") {
-        await setActive({ session: signUpAttempt.createdSessionId });
-        await user?.update({ firstName: firstName });
-        router({ to: "/dashboard" });
-      } else {
-        console.log(signUpAttempt);
-      }
+    try {
+      toast.promise(
+        async () => {
+          const signUpAttempt = await signUp.attemptEmailAddressVerification({
+            code,
+          });
+
+          if (signUpAttempt.status === "complete") {
+            await setActive({ session: signUpAttempt.createdSessionId });
+          } else {
+            console.log(signUpAttempt);
+          }
+        },
+        {
+          loading: "Verifying the provided code...",
+          success: () => {
+            router({ to: "/dashboard" });
+          },
+          error: <b>The given code in incorrect!</b>,
+        }
+      );
     } catch (error) {
       console.log(error);
     }
@@ -100,28 +116,6 @@ const AuthPage = () => {
                       <h2 className="md:text-4xl text-2xl font-semibold">
                         Create Account
                       </h2>
-                      <div className="w-full">
-                        <FormField
-                          control={form.control}
-                          name="firstName"
-                          render={({ field, fieldState }) => (
-                            <FormControl>
-                              <div>
-                                <input
-                                  {...field}
-                                  className="border-gray-500 border-[2px] py-2 w-full rounded-lg px-4 shadow-xl outline-none"
-                                  placeholder="Your first name"
-                                />
-                                {fieldState.error?.message && (
-                                  <span className="mt-2 text-red-500 text-sm font-semibold">
-                                    {fieldState.error.message}
-                                  </span>
-                                )}
-                              </div>
-                            </FormControl>
-                          )}
-                        />
-                      </div>
 
                       <div className="w-full">
                         <FormField

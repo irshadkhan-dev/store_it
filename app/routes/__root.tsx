@@ -10,6 +10,7 @@ import appCss from "@/styles/app.css?url";
 
 import { ClerkProvider } from "@clerk/tanstack-start";
 import { NotFound } from "@/components/NotFound";
+import { Toaster } from "react-hot-toast";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
@@ -56,6 +57,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 
         <body>
           {children}
+          <Toaster position="top-right" />
           <Scripts />
         </body>
       </html>

@@ -9,7 +9,6 @@ const AuthTypeSchema = z.enum(["sign-up", "sign-in"]);
 export type AuthType = z.infer<typeof AuthTypeSchema>;
 
 const SignUpSchema = z.object({
-  firstName: z.string().nonempty({ message: "First name should be provided" }),
   email: z.string().email().nonempty({ message: "Email should be provided" }),
 });
 

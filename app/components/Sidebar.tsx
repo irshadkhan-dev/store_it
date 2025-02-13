@@ -1,7 +1,12 @@
 import { SidebarFolderData } from "../utils/data";
 import SidebarFolderBtn from "./SidebarFolderBtn";
 
-const Sidebar = () => {
+type User = {
+  firstName: string;
+  email: string;
+};
+
+const Sidebar = ({ firstName, email }: User) => {
   return (
     <div className="flex flex-col">
       <div className="flex flex-col space-y-5">
@@ -24,8 +29,8 @@ const Sidebar = () => {
             A
           </div>
           <div className="flex flex-col">
-            <span>Irshad</span>
-            <span className="text-sm">irshadkhan98031@gmail.com</span>
+            <span>{firstName}</span>
+            <span className="text-sm">{email}</span>
           </div>
         </div>
       </div>
