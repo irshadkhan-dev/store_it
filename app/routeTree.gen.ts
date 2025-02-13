@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as IndexImport } from './routes/index'
+import { Route as AuthSsoCallbackIndexImport } from './routes/auth/sso-callback/index'
 import { Route as LayoutImagesIndexImport } from './routes/_layout/images/index'
 import { Route as LayoutDashboardIndexImport } from './routes/_layout/dashboard/index'
 
@@ -26,6 +27,12 @@ const LayoutRoute = LayoutImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthSsoCallbackIndexRoute = AuthSsoCallbackIndexImport.update({
+  id: '/auth/sso-callback/',
+  path: '/auth/sso-callback/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -73,6 +80,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutImagesIndexImport
       parentRoute: typeof LayoutImport
     }
+    '/auth/sso-callback/': {
+      id: '/auth/sso-callback/'
+      path: '/auth/sso-callback'
+      fullPath: '/auth/sso-callback'
+      preLoaderRoute: typeof AuthSsoCallbackIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -96,6 +110,7 @@ export interface FileRoutesByFullPath {
   '': typeof LayoutRouteWithChildren
   '/dashboard': typeof LayoutDashboardIndexRoute
   '/images': typeof LayoutImagesIndexRoute
+  '/auth/sso-callback': typeof AuthSsoCallbackIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -103,6 +118,7 @@ export interface FileRoutesByTo {
   '': typeof LayoutRouteWithChildren
   '/dashboard': typeof LayoutDashboardIndexRoute
   '/images': typeof LayoutImagesIndexRoute
+  '/auth/sso-callback': typeof AuthSsoCallbackIndexRoute
 }
 
 export interface FileRoutesById {
@@ -111,25 +127,34 @@ export interface FileRoutesById {
   '/_layout': typeof LayoutRouteWithChildren
   '/_layout/dashboard/': typeof LayoutDashboardIndexRoute
   '/_layout/images/': typeof LayoutImagesIndexRoute
+  '/auth/sso-callback/': typeof AuthSsoCallbackIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/dashboard' | '/images'
+  fullPaths: '/' | '' | '/dashboard' | '/images' | '/auth/sso-callback'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/dashboard' | '/images'
-  id: '__root__' | '/' | '/_layout' | '/_layout/dashboard/' | '/_layout/images/'
+  to: '/' | '' | '/dashboard' | '/images' | '/auth/sso-callback'
+  id:
+    | '__root__'
+    | '/'
+    | '/_layout'
+    | '/_layout/dashboard/'
+    | '/_layout/images/'
+    | '/auth/sso-callback/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LayoutRoute: typeof LayoutRouteWithChildren
+  AuthSsoCallbackIndexRoute: typeof AuthSsoCallbackIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LayoutRoute: LayoutRouteWithChildren,
+  AuthSsoCallbackIndexRoute: AuthSsoCallbackIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -143,7 +168,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/_layout"
+        "/_layout",
+        "/auth/sso-callback/"
       ]
     },
     "/": {
@@ -163,6 +189,9 @@ export const routeTree = rootRoute
     "/_layout/images/": {
       "filePath": "_layout/images/index.tsx",
       "parent": "/_layout"
+    },
+    "/auth/sso-callback/": {
+      "filePath": "auth/sso-callback/index.tsx"
     }
   }
 }

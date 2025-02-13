@@ -1,13 +1,16 @@
-import React, { use, useState } from "react";
-import { AuthType, getAuthSchema, SignIn, SignUp, User } from "@/types/auth";
+import React, { useState } from "react";
+import { useSignUp } from "@clerk/tanstack-start";
+import { useNavigate } from "@tanstack/react-router";
+
+import { AuthType, getAuthSchema, SignUp } from "@/types/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSignUp } from "@clerk/tanstack-start";
-import OtpModal from "./OtpModal";
-import { Form, FormControl, FormField } from "../ui/form";
-import { useNavigate } from "@tanstack/react-router";
-import { useUser } from "@clerk/tanstack-start";
 import toast from "react-hot-toast";
+
+import SignUpBtn from "@/components/auth/SignUp";
+import OtpModal from "@/components/auth/OtpModal";
+import { Form, FormControl, FormField } from "@/components/ui/form";
+import { Github, Google } from "@/utils/helperFunc";
 
 const AuthPage = () => {
   const [authType, setAuthType] = useState<AuthType>("sign-up");
@@ -107,49 +110,67 @@ const AuthPage = () => {
         </div>
 
         <div className="w-full flex items-center justify-center max-md:p-10">
-          <div className="flex flex-col max-w-lg w-full space-y-10 px-10">
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="w-full flex flex-col space-y-8">
-                  {authType === "sign-up" ? (
-                    <>
-                      <h2 className="md:text-4xl text-2xl font-semibold">
-                        Create Account
-                      </h2>
+          <div className="flex flex-col space-y-4 max-w-lg w-full px-10">
+            <div className="flex flex-col w-full space-y-10">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                  <div className="w-full flex flex-col space-y-8">
+                    {authType === "sign-up" ? (
+                      <>
+                        <h2 className="md:text-4xl text-2xl font-semibold">
+                          Create Account
+                        </h2>
 
-                      <div className="w-full">
-                        <FormField
-                          control={form.control}
-                          name="email"
-                          render={({ field, fieldState }) => (
-                            <FormControl>
-                              <div>
-                                <input
-                                  {...field}
-                                  className="border-gray-500 border-[2px] py-2 w-full rounded-lg px-4 shadow-xl outline-none"
-                                  placeholder="Valid email"
-                                />
-                                {fieldState.error?.message && (
-                                  <span className="mt-2 text-red-500 text-sm font-semibold">
-                                    {fieldState.error.message}
-                                  </span>
-                                )}
-                              </div>
-                            </FormControl>
-                          )}
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <></>
-                  )}
+                        <div className="w-full">
+                          <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field, fieldState }) => (
+                              <FormControl>
+                                <div>
+                                  <input
+                                    {...field}
+                                    className="border-gray-500 border-[2px] py-2 w-full rounded-lg px-4 shadow-xl outline-none"
+                                    placeholder="Valid email"
+                                  />
+                                  {fieldState.error?.message && (
+                                    <span className="mt-2 text-red-500 text-sm font-semibold">
+                                      {fieldState.error.message}
+                                    </span>
+                                  )}
+                                </div>
+                              </FormControl>
+                            )}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
 
-                  <button className="w-full bg-[#FA7275] text-white font-semibold text-xl py-2.5 rounded-xl cursor-pointer">
-                    {authType === "sign-up" ? "Create Account" : "Login"}
-                  </button>
-                </div>
-              </form>
-            </Form>
+                    <button className="w-full bg-[#FA7275] text-white font-semibold text-xl py-2.5 rounded-xl cursor-pointer">
+                      {authType === "sign-up" ? "Create Account" : "Login"}
+                    </button>
+                  </div>
+                </form>
+              </Form>
+            </div>
+            <div className="text-3xl font-bold text-center font-[italic]">
+              Or,
+            </div>
+            <div className="flex items-center justify-center space-x-16">
+              <SignUpBtn
+                provider="oauth_google"
+                providerName="Google"
+                icon={Google}
+              />
+
+              <SignUpBtn
+                provider="oauth_github"
+                providerName="Github"
+                icon={Github}
+              />
+            </div>
           </div>
         </div>
       </div>
