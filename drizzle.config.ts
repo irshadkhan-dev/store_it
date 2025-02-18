@@ -8,4 +8,5 @@ export default defineConfig({
   dbCredentials: {
     url: process.env.SINGLESTORE_DATABASE_URL!,
   },
+  tablesFilter: ["drive_*"],
 });
