@@ -1,14 +1,21 @@
 {
   "version": "1",
   "dialect": "singlestore",
-  "id": "5efbb97f-1abe-42cf-a610-91484df395c4",
+  "id": "c1f42630-989a-4b00-b169-16ded45c9515",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "users": {
-      "name": "users",
+    "files_table": {
+      "name": "files_table",
       "columns": {
         "id": {
           "name": "id",
+          "type": "bigint unsigned",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "owner_id": {
+          "name": "owner_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -20,12 +27,49 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "size": {
+          "name": "size",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "extension": {
+          "name": "extension",
+          "type": "enum('image','media','document','other')",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "owner_id_index": {
+          "name": "owner_id_index",
+          "columns": [
+            "owner_id"
+          ],
+          "isUnique": false
+        }
+      },
       "compositePrimaryKeys": {
-        "users_id": {
-          "name": "users_id",
+        "files_table_id": {
+          "name": "files_table_id",
           "columns": [
             "id"
           ]
