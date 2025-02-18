@@ -1,7 +1,8 @@
 import z from "zod";
 
 export type User = {
-  firstName: string;
+  id: string;
+  firstName: string | null;
   email: string;
 };
 

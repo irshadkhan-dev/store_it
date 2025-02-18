@@ -20,8 +20,12 @@ const Sidebar = ({ firstName, email }: User) => {
         ))}
       </div>
       <div className="flex flex-col space-y-4 pt-7">
-        <div>
-          <img src="/illustration.png" alt="" className="w-72 h-60 shrink-0" />
+        <div className="max-w-[15rem]">
+          <img
+            src="/illustration.png"
+            alt=""
+            className="w-full h-60 shrink-0"
+          />
         </div>
 
         <div className="flex flex-row items-center space-x-2 rounded-lg bg-[#F2F4F8] p-2">
@@ -30,7 +34,7 @@ const Sidebar = ({ firstName, email }: User) => {
           </div>
           <div className="flex flex-col">
             <span>{firstName}</span>
-            <span className="text-sm">{email}</span>
+            <span className="text-xs">{email}</span>
           </div>
         </div>
       </div>

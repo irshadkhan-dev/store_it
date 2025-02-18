@@ -19,7 +19,7 @@ export const SidebarFolderData: SidebarFolder[] = [
     id: 1,
     name: "Dashboard",
     icon: LayoutDashboard,
-    link: "/dashboard",
+    link: "/",
   },
   {
     id: 2,

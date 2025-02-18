@@ -11,6 +11,7 @@ import SignUpBtn from "@/components/auth/SignUp";
 import OtpModal from "@/components/auth/OtpModal";
 import { Form, FormControl, FormField } from "@/components/ui/form";
 import { Github, Google } from "@/utils/helperFunc";
+import { AuthLayout } from "./AuthLayout";
 
 const AuthPage = () => {
   const [authType, setAuthType] = useState<AuthType>("sign-up");
@@ -69,7 +70,7 @@ const AuthPage = () => {
         {
           loading: "Verifying the provided code...",
           success: () => {
-            router({ to: "/dashboard" });
+            router({ to: "/" });
           },
           error: <b>The given code in incorrect!</b>,
         }

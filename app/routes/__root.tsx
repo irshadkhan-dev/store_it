@@ -1,8 +1,9 @@
-import { Meta, Scripts } from "@tanstack/start";
+import { createServerFn, Meta, Scripts } from "@tanstack/start";
 import {
   Outlet,
   createRootRoute,
   createRootRouteWithContext,
+  redirect,
 } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { QueryClient } from "@tanstack/react-query";
@@ -12,32 +13,33 @@ import { ClerkProvider } from "@clerk/tanstack-start";
 import { NotFound } from "@/components/NotFound";
 import { Toaster } from "react-hot-toast";
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
-  {
-    head: () => ({
-      meta: [
-        {
-          charSet: "utf-8",
-        },
-        {
-          name: "viewport",
-          content: "width=device-width, initial-scale=1",
-        },
-        {
-          title: "TanStack Start Starter",
-        },
-      ],
-      links: [
-        {
-          rel: "stylesheet",
-          href: appCss,
-        },
-      ],
-    }),
-    notFoundComponent: () => <NotFound />,
-    component: RootComponent,
-  }
-);
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient;
+}>()({
+  head: () => ({
+    meta: [
+      {
+        charSet: "utf-8",
+      },
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
+      },
+      {
+        title: "TanStack Start Starter",
+      },
+    ],
+    links: [
+      {
+        rel: "stylesheet",
+        href: appCss,
+      },
+    ],
+  }),
+
+  notFoundComponent: () => <NotFound />,
+  component: RootComponent,
+});
 
 function RootComponent() {
   return (

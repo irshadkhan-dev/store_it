@@ -20,7 +20,7 @@ const SignUpBtn = ({
         return signUp.authenticateWithRedirect({
           strategy,
           redirectUrl: "/sign-up/sso-callback",
-          redirectUrlComplete: "/dashboard",
+          redirectUrlComplete: "/",
         });
       },
       {

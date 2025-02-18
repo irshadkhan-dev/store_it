@@ -5,5 +5,5 @@ export const Route = createFileRoute("/_layout/images/")({
 });
 
 function RouteComponent() {
-  return <div>Hello Images</div>;
+  return <div>Hello "/_layout/images/"!</div>;
 }

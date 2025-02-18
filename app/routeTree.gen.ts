@@ -12,10 +12,10 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutImport } from './routes/_layout'
-import { Route as IndexImport } from './routes/index'
+import { Route as LayoutIndexImport } from './routes/_layout/index'
 import { Route as AuthSsoCallbackIndexImport } from './routes/auth/sso-callback/index'
+import { Route as AuthAuthPageIndexImport } from './routes/auth/auth-page/index'
 import { Route as LayoutImagesIndexImport } from './routes/_layout/images/index'
-import { Route as LayoutDashboardIndexImport } from './routes/_layout/dashboard/index'
 
 // Create/Update Routes
 
@@ -24,15 +24,21 @@ const LayoutRoute = LayoutImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const LayoutIndexRoute = LayoutIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => LayoutRoute,
 } as any)
 
 const AuthSsoCallbackIndexRoute = AuthSsoCallbackIndexImport.update({
   id: '/auth/sso-callback/',
   path: '/auth/sso-callback/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthAuthPageIndexRoute = AuthAuthPageIndexImport.update({
+  id: '/auth/auth-page/',
+  path: '/auth/auth-page/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -42,23 +48,10 @@ const LayoutImagesIndexRoute = LayoutImagesIndexImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
-const LayoutDashboardIndexRoute = LayoutDashboardIndexImport.update({
-  id: '/dashboard/',
-  path: '/dashboard/',
-  getParentRoute: () => LayoutRoute,
-} as any)
-
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
     '/_layout': {
       id: '/_layout'
       path: ''
@@ -66,11 +59,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutImport
       parentRoute: typeof rootRoute
     }
-    '/_layout/dashboard/': {
-      id: '/_layout/dashboard/'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof LayoutDashboardIndexImport
+    '/_layout/': {
+      id: '/_layout/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
     }
     '/_layout/images/': {
@@ -79,6 +72,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/images'
       preLoaderRoute: typeof LayoutImagesIndexImport
       parentRoute: typeof LayoutImport
+    }
+    '/auth/auth-page/': {
+      id: '/auth/auth-page/'
+      path: '/auth/auth-page'
+      fullPath: '/auth/auth-page'
+      preLoaderRoute: typeof AuthAuthPageIndexImport
+      parentRoute: typeof rootRoute
     }
     '/auth/sso-callback/': {
       id: '/auth/sso-callback/'
@@ -93,12 +93,12 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface LayoutRouteChildren {
-  LayoutDashboardIndexRoute: typeof LayoutDashboardIndexRoute
+  LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutImagesIndexRoute: typeof LayoutImagesIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
-  LayoutDashboardIndexRoute: LayoutDashboardIndexRoute,
+  LayoutIndexRoute: LayoutIndexRoute,
   LayoutImagesIndexRoute: LayoutImagesIndexRoute,
 }
 
@@ -106,54 +106,53 @@ const LayoutRouteWithChildren =
   LayoutRoute._addFileChildren(LayoutRouteChildren)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '': typeof LayoutRouteWithChildren
-  '/dashboard': typeof LayoutDashboardIndexRoute
+  '/': typeof LayoutIndexRoute
   '/images': typeof LayoutImagesIndexRoute
+  '/auth/auth-page': typeof AuthAuthPageIndexRoute
   '/auth/sso-callback': typeof AuthSsoCallbackIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '': typeof LayoutRouteWithChildren
-  '/dashboard': typeof LayoutDashboardIndexRoute
+  '/': typeof LayoutIndexRoute
   '/images': typeof LayoutImagesIndexRoute
+  '/auth/auth-page': typeof AuthAuthPageIndexRoute
   '/auth/sso-callback': typeof AuthSsoCallbackIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
   '/_layout': typeof LayoutRouteWithChildren
-  '/_layout/dashboard/': typeof LayoutDashboardIndexRoute
+  '/_layout/': typeof LayoutIndexRoute
   '/_layout/images/': typeof LayoutImagesIndexRoute
+  '/auth/auth-page/': typeof AuthAuthPageIndexRoute
   '/auth/sso-callback/': typeof AuthSsoCallbackIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/dashboard' | '/images' | '/auth/sso-callback'
+  fullPaths: '' | '/' | '/images' | '/auth/auth-page' | '/auth/sso-callback'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/dashboard' | '/images' | '/auth/sso-callback'
+  to: '/' | '/images' | '/auth/auth-page' | '/auth/sso-callback'
   id:
     | '__root__'
-    | '/'
     | '/_layout'
-    | '/_layout/dashboard/'
+    | '/_layout/'
     | '/_layout/images/'
+    | '/auth/auth-page/'
     | '/auth/sso-callback/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   LayoutRoute: typeof LayoutRouteWithChildren
+  AuthAuthPageIndexRoute: typeof AuthAuthPageIndexRoute
   AuthSsoCallbackIndexRoute: typeof AuthSsoCallbackIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   LayoutRoute: LayoutRouteWithChildren,
+  AuthAuthPageIndexRoute: AuthAuthPageIndexRoute,
   AuthSsoCallbackIndexRoute: AuthSsoCallbackIndexRoute,
 }
 
@@ -167,28 +166,28 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
         "/_layout",
+        "/auth/auth-page/",
         "/auth/sso-callback/"
       ]
-    },
-    "/": {
-      "filePath": "index.tsx"
     },
     "/_layout": {
       "filePath": "_layout.tsx",
       "children": [
-        "/_layout/dashboard/",
+        "/_layout/",
         "/_layout/images/"
       ]
     },
-    "/_layout/dashboard/": {
-      "filePath": "_layout/dashboard/index.tsx",
+    "/_layout/": {
+      "filePath": "_layout/index.tsx",
       "parent": "/_layout"
     },
     "/_layout/images/": {
       "filePath": "_layout/images/index.tsx",
       "parent": "/_layout"
+    },
+    "/auth/auth-page/": {
+      "filePath": "auth/auth-page/index.tsx"
     },
     "/auth/sso-callback/": {
       "filePath": "auth/sso-callback/index.tsx"
