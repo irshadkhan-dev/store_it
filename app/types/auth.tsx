@@ -6,6 +6,19 @@ export type User = {
   email: string;
 };
 
+export type UserData = {
+  id: string | undefined;
+  email: string | undefined;
+  firstName: string | null | undefined;
+};
+
+export type SummaryDataType = {
+  media: number;
+  image: number;
+  document: number;
+  other: number;
+};
+
 const AuthTypeSchema = z.enum(["sign-up", "sign-in"]);
 export type AuthType = z.infer<typeof AuthTypeSchema>;
 
