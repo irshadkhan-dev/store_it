@@ -1,17 +1,12 @@
 import MaxWidthwrapper from "@/components/MaxWidthwrapper";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
+import { UserData } from "@/types/auth";
 
 import { clerkClient, getAuth } from "@clerk/tanstack-start/server";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/start";
 import { getWebRequest } from "vinxi/http";
-
-type UserData = {
-  id: string | undefined;
-  email: string | undefined;
-  firstName: string | null | undefined;
-};
 
 const authStateFn = createServerFn({ method: "GET" }).handler(async () => {
   const { userId } = await getAuth(getWebRequest());
@@ -47,7 +42,7 @@ export const Route = createFileRoute("/_layout")({
     }
   },
   component: RouteComponent,
-  loader: ({ context }) => {
+  loader: async ({ context }) => {
     const user = context.queryClient.getQueryData<UserData>(["user"]);
     return user;
   },
@@ -64,7 +59,7 @@ function RouteComponent() {
           <div className="hidden md:flex shrink-0 mr-8">
             <Sidebar firstName={user.firstName!} email={user.email!} />
           </div>
-          <div className="w-full py-6 px-4 rounded-xl bg-[#F2F4F8]">
+          <div className="w-full py-6 px-8 rounded-xl bg-[#f1f4f8]">
             <Outlet />
           </div>
         </div>

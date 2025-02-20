@@ -29,7 +29,7 @@ const SpaceCard = ({
         <div
           className={`rounded-full bg-[${iconColor}] flex items-center p-3 absolute -left-2.5`}
         >
-          <Video className="w-8 h-8 shrink-0 text-white" fill="#fff" />
+          <Icon />
         </div>
         <h4 className="text-right text-[#333F4E] font-medium text-lg">2GB</h4>
       </div>

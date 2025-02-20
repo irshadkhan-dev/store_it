@@ -92,6 +92,61 @@
 }
 
 @layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 346.8 77.2% 49.8%;
+    --primary-foreground: 355.7 100% 99%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 45%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 346.8 77.2% 49.8%;
+    --chart-1: 347 77% 50%;
+    --chart-2: 352 83% 91%;
+    --chart-3: 350 80% 72%;
+    --chart-4: 351 83% 82%;
+    --chart-5: 349 77% 62%;
+  }
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 346.8 77.2% 49.8%;
+    --primary-foreground: 355.7 100% 99%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 221.2 83.2% 53.3%;
+    --chart-1: 347 77% 50%;
+    --chart-2: 349 77% 62%;
+    --chart-3: 350 80% 72%;
+    --chart-4: 351 83% 82%;
+    --chart-5: 352 83% 91%;
+  }
+}
+
+@layer base {
   * {
     @apply border-border outline-ring/50;
   }
@@ -117,4 +172,30 @@
   .animate-caret-blink {
     animation: caret-blink 1.25s ease-out infinite;
   }
+}
+
+.card-gradient {
+  background-image: linear-gradient(
+    125deg,
+    hsl(165deg 67% 55%) 0%,
+    hsl(165deg 67% 57%) 3%,
+    hsl(165deg 66% 59%) 7%,
+    hsl(165deg 66% 61%) 10%,
+    hsl(165deg 65% 63%) 14%,
+    hsl(165deg 65% 65%) 18%,
+    hsl(165deg 65% 66%) 22%,
+    hsl(165deg 65% 68%) 27%,
+    hsl(165deg 64% 69%) 32%,
+    hsl(165deg 64% 71%) 37%,
+    hsl(165deg 64% 73%) 44%,
+    hsl(164deg 64% 77%) 50%,
+    hsl(164deg 64% 80%) 57%,
+    hsl(163deg 64% 83%) 64%,
+    hsl(163deg 64% 86%) 71%,
+    hsl(163deg 64% 89%) 78%,
+    hsl(162deg 64% 92%) 84%,
+    hsl(162deg 64% 94%) 89%,
+    hsl(162deg 64% 97%) 95%,
+    hsl(0deg 0% 100%) 100%
+  );
 }
