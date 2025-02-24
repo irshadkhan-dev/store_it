@@ -15,7 +15,7 @@ export const filesTable = t.singlestoreTable(
     name: t.text("name").notNull(),
     size: t.int("size").notNull(),
     url: t.text("url").notNull(),
-    extension: t.singlestoreEnum(["image", "media", "document", "other"]),
+    fileType: t.text().notNull(),
     createdAt: t.timestamp("created_at").notNull().defaultNow(),
   },
   (t) => {
