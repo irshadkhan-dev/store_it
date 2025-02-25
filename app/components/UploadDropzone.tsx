@@ -1,7 +1,15 @@
-import { UploadDropZone, useUploadThing } from "@/utils/uploadthing";
-import { useDropzone } from "@uploadthing/react";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { UploadCloud } from "lucide-react";
+import { useDropzone } from "@uploadthing/react";
+
+import {
+  generatePermittedFileTypes,
+  generateClientDropzoneAccept,
+} from "uploadthing/client";
+
+import { useUploadThing } from "@/components/ui/uploadthing";
+import { cn } from "@/lib/utils";
 
 const UploadDropzone = ({
   setDropZoneActive,
@@ -30,23 +38,30 @@ const UploadDropzone = ({
     };
   }, [setDropZoneActive]);
 
-  const { isUploading, startUpload } = useUploadThing("fileUploader");
+  const { startUpload, routeConfig } = useUploadThing("fileUploader", {
+    onUploadError: ({ message }) => {
+      toast.error(message);
+    },
 
-  const onDrop = (files: File[]) => {
-    toast.promise(
-      async () => {
-        await startUpload(files);
-      },
-      {
+    onUploadBegin: () => {
+      setDropZoneActive(false);
+    },
+  });
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop(acceptedFiles) {
+      toast.promise(() => startUpload(acceptedFiles), {
         loading: () => {
-          setDropZoneActive(false);
-          return <b>Uploading Files....</b>;
+          return <b>Uploading files...</b>;
         },
-        success: <b>Files Uploaded Succesfully.</b>,
-        error: "Failed to upload file, please try again.",
-      }
-    );
-  };
+        success: <b>Uploading Resolved.</b>,
+        error: "Error while uploading file. Please try again.",
+      });
+    },
+    accept: generateClientDropzoneAccept(
+      generatePermittedFileTypes(routeConfig).fileTypes
+    ),
+  });
 
   return (
     <div
@@ -57,16 +72,26 @@ const UploadDropzone = ({
         className="p-4 flex flex-col space-y-5 bg-white rounded-3xl"
         ref={dropZoneRef}
       >
-        <UploadDropZone
-          className="text-[#FA7275]"
-          appearance={{
-            container(args) {
-              return args.isDragActive ? "bg-gray-300" : "bg-white";
-            },
-          }}
-          endpoint={"fileUploader"}
-          onChange={onDrop}
-        />
+        <div
+          className={cn(
+            "border-[2px] bg-white border-gray-500 border-dashed rounded-2xl p-10",
+            {
+              "border-[#FA7275] bg-gray-300": isDragActive,
+            }
+          )}
+          {...getRootProps()}
+        >
+          <input {...getInputProps()} />
+          <div className="flex flex-col space-y-3 items-center">
+            <UploadCloud className="h-10 w-10 text-[#FA7275]" />
+            <span className="text-base text-gray-400">
+              Max file size limit 1GB
+            </span>
+            <span className="text-base text-gray-500">
+              Drag n Drop or click to select file for uploading
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );
