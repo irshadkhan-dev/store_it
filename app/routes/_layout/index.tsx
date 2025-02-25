@@ -9,9 +9,10 @@ import { eq } from "drizzle-orm";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "@/components/Loading";
 import SpaceCard from "@/components/dashboard/SpaceCard";
-import { FolderOpenDot } from "lucide-react";
-import { getSpaceUsed } from "@/utils/helperFunc";
+
 import { UserData } from "@/types/auth";
+import { getSpaceUsedSummary, getUsageSummary } from "@/utils/helperFunc";
+import { useCallback } from "react";
 
 const getAllFile = createServerFn({ method: "GET" })
   .validator((data: string) => data)
@@ -40,23 +41,31 @@ function RouteComponent() {
     staleTime: Infinity,
   });
 
-  const { document, media, image, other } = getSpaceUsed({ data: data! });
+  const getSpaceSummary = useCallback(getSpaceUsedSummary, [data]);
+  const spaceSummary = getSpaceSummary({ data: data! });
 
-  if (isError) return <div>Error</div>;
+  if (isError) {
+    console.log("error loading component");
+  }
   if (isLoading) return <Loading />;
 
+  const cardSummary = getUsageSummary(spaceSummary);
+  console.log(spaceSummary);
   return (
     <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 xl:grid-cols-2 xl:gap-10">
       <div className="flex flex-col">
         <AvailableSpaceCard />
         <div className="mt-6 grid grid-cols-1 gap-4 xl:mt-10 lg:grid-cols-2 xl:gap-9">
-          <SpaceCard
-            icon={FolderOpenDot}
-            iconColor="#FF7474"
-            category="Documents"
-            link="/documents"
-            lastUpdatedDate="10:15am, 20Feb"
-          />
+          {cardSummary.map((item) => (
+            <SpaceCard
+              key={item.title}
+              title={item.title}
+              icon={item.icon}
+              size={item.size}
+              link={item.url}
+              iconColor={item.iconBgColor}
+            />
+          ))}
         </div>
       </div>
     </div>
