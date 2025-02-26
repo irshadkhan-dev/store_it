@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { UploadCloud } from "lucide-react";
 import { useDropzone } from "@uploadthing/react";
@@ -16,6 +17,7 @@ const UploadDropzone = ({
 }: {
   setDropZoneActive: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const queryClient = useQueryClient();
   const modalRef = useRef<HTMLDivElement>(null);
   const dropZoneRef = useRef<HTMLDivElement | null>(null);
 
@@ -46,6 +48,9 @@ const UploadDropzone = ({
     onUploadBegin: () => {
       setDropZoneActive(false);
     },
+    onClientUploadComplete: () => {
+      queryClient.invalidateQueries({ queryKey: ["allFiles"] });
+    },
   });
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -58,6 +63,7 @@ const UploadDropzone = ({
         error: "Error while uploading file. Please try again.",
       });
     },
+
     accept: generateClientDropzoneAccept(
       generatePermittedFileTypes(routeConfig).fileTypes
     ),
@@ -65,7 +71,7 @@ const UploadDropzone = ({
 
   return (
     <div
-      className="fixed w-full z-[90] bg-black/60 h-screen flex items-center justify-center"
+      className="fixed w-full z-[90] bg-black/60 h-[100vh] flex items-center justify-center"
       ref={modalRef}
     >
       <div

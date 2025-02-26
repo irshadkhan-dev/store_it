@@ -8,10 +8,12 @@ const SidebarMobile = ({
   open,
   handleCloseSidebar,
   className,
+  setDropZoneActive,
 }: {
   open: boolean;
   className: string;
   handleCloseSidebar: () => void;
+  setDropZoneActive: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
     <div
@@ -22,7 +24,7 @@ const SidebarMobile = ({
     >
       <div className="flex w-full flex-col justify-center space-y-10 p-4">
         <div className="flex items-center justify-between">
-          <UploadBtn />
+          <UploadBtn setDropZoneActive={setDropZoneActive} />
           <CircleX
             className="h-8 w-8 cursor-pointer text-[#FA7275]"
             onClick={handleCloseSidebar}

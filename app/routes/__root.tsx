@@ -1,10 +1,5 @@
-import { createServerFn, Meta, Scripts } from "@tanstack/start";
-import {
-  Outlet,
-  createRootRoute,
-  createRootRouteWithContext,
-  redirect,
-} from "@tanstack/react-router";
+import { Meta, Scripts } from "@tanstack/start";
+import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { QueryClient } from "@tanstack/react-query";
 import appCss from "@/styles/app.css?url";

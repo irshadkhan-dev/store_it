@@ -1,22 +1,27 @@
 import { cn } from "@/lib/utils";
+import { convertFileSize } from "@/utils/helperFunc";
 import { Link } from "@tanstack/react-router";
+import { format } from "date-fns";
 import { LucideIcon, Video } from "lucide-react";
 
 const SpaceCard = ({
   className,
   icon: Icon,
-  category,
-  lastUpdatedDate,
+  title,
   iconColor,
   link,
+  size,
+  latestDate,
 }: {
   className?: string;
   icon: LucideIcon;
-  category: string;
-  lastUpdatedDate: string;
+  title: string;
+  size: number;
   iconColor: string;
   link: string;
+  latestDate: Date;
 }) => {
+  const formattedDate = format(latestDate, "h:mma, dd MMM");
   return (
     <Link
       to={link}
@@ -27,15 +32,18 @@ const SpaceCard = ({
     >
       <div className="flex flex-col space-y-4 justify-center">
         <div
-          className={`rounded-full bg-[${iconColor}] flex items-center p-3 absolute -left-2.5`}
+          className={`rounded-full  flex items-center p-3 absolute -left-2.5`}
+          style={{ backgroundColor: `${iconColor}` }}
         >
-          <Icon />
+          <Icon className="text-white" />
         </div>
-        <h4 className="text-right text-[#333F4E] font-medium text-lg">2GB</h4>
+        <h4 className="text-right text-[#333F4E] font-medium text-lg">
+          {size ? convertFileSize(size) : "No uploads"}
+        </h4>
       </div>
 
       <span className="w-full text-center text-[#333F4E] text-[16px] font-medium mt-2">
-        {category}
+        {title}
       </span>
 
       <div className="flex h-[0.3px] bg-[#A3B2C7] w-full mt-4" />
@@ -46,7 +54,7 @@ const SpaceCard = ({
         </span>
 
         <div className="text-[#333F4E] text-base font-normal text-center">
-          {lastUpdatedDate}
+          {formattedDate}
         </div>
       </div>
     </Link>

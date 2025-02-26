@@ -11,8 +11,15 @@ import Loading from "@/components/Loading";
 import SpaceCard from "@/components/dashboard/SpaceCard";
 
 import { UserData } from "@/types/auth";
-import { getSpaceUsedSummary, getUsageSummary } from "@/utils/helperFunc";
+import {
+  getRecentFileUploaded,
+  getSpaceUsedSummary,
+  getTotalSpaceUsed,
+  getUsageSummary,
+} from "@/utils/helperFunc";
 import { useCallback } from "react";
+import RecentFileCard from "@/components/dashboard/RecentFileUploads";
+import ErrorComp from "@/components/Error";
 
 const getAllFile = createServerFn({ method: "GET" })
   .validator((data: string) => data)
@@ -21,7 +28,7 @@ const getAllFile = createServerFn({ method: "GET" })
       .select()
       .from(filesTable)
       .where(eq(filesTable.ownerId, ctx.data))
-      .orderBy(filesTable.id);
+      .orderBy(filesTable.createdAt);
   });
 
 export const Route = createFileRoute("/_layout/")({
@@ -41,21 +48,23 @@ function RouteComponent() {
     staleTime: Infinity,
   });
 
+  const getTotalSpace = useCallback(getTotalSpaceUsed, [data]);
   const getSpaceSummary = useCallback(getSpaceUsedSummary, [data]);
-  const spaceSummary = getSpaceSummary({ data: data! });
 
-  if (isError) {
-    console.log("error loading component");
-  }
+  const spaceSummary = getSpaceSummary({ data: data! });
+  const totalSpaceUsed = getTotalSpace({ data: data! });
+
+  if (isError) return <ErrorComp />;
   if (isLoading) return <Loading />;
 
   const cardSummary = getUsageSummary(spaceSummary);
-  console.log(spaceSummary);
+  const recentFiles = getRecentFileUploaded({ data: data! });
+
   return (
-    <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 xl:grid-cols-2 xl:gap-10">
+    <div className="mx-auto grid grid-cols-1 gap-6 lg:grid-cols-2 xl:gap-10">
       <div className="flex flex-col">
-        <AvailableSpaceCard />
-        <div className="mt-6 grid grid-cols-1 gap-4 xl:mt-10 lg:grid-cols-2 xl:gap-9">
+        <AvailableSpaceCard spaceUsed={totalSpaceUsed} />
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
           {cardSummary.map((item) => (
             <SpaceCard
               key={item.title}
@@ -64,6 +73,23 @@ function RouteComponent() {
               size={item.size}
               link={item.url}
               iconColor={item.iconBgColor}
+              latestDate={item.lastUpdated}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="max-lg:hidden w-full bg-white rounded-2xl  p-5 pr-10 drop-shadow-2xl">
+        <h2 className="text-2xl font-bold text-neutral-700">
+          Recent Files Uploaded
+        </h2>
+        <div className="flex flex-col space-y-4 mt-4">
+          {recentFiles.map((item) => (
+            <RecentFileCard
+              name={item.name}
+              icon={item.icon}
+              iconBgColor={item.iconBgColor}
+              createdAt={item.createdAt}
             />
           ))}
         </div>

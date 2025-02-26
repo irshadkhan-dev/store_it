@@ -10,8 +10,7 @@ import toast from "react-hot-toast";
 import SignUpBtn from "@/components/auth/SignUp";
 import OtpModal from "@/components/auth/OtpModal";
 import { Form, FormControl, FormField } from "@/components/ui/form";
-import { Github, Google } from "@/utils/helperFunc";
-import { AuthLayout } from "./AuthLayout";
+import { Github, Google } from "@/utils/icons";
 
 const AuthPage = () => {
   const [authType, setAuthType] = useState<AuthType>("sign-up");

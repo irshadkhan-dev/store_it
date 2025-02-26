@@ -15,10 +15,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { storage: "used", space: 2, fill: "#f9fafb" },
-  { storage: "left", space: 1, fill: "#d1d5dc" },
-];
+import {
+  getTotalSpaceUsedPercentage,
+  TOTAL_SPACE_AVAILABLE_IN_MB,
+} from "@/utils/helperFunc";
 
 const chartConfig = {
   space: {
@@ -32,7 +32,8 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const AvailableSpaceCard = () => {
+const AvailableSpaceCard = ({ spaceUsed }: { spaceUsed: number }) => {
+  const { sizeInMB, percentage } = getTotalSpaceUsedPercentage(spaceUsed);
   return (
     <div className="bg-[#FA7275] rounded-3xl shadow-xl flex items-center">
       <div className="w-[22rem]">
@@ -46,7 +47,18 @@ const AvailableSpaceCard = () => {
               content={<ChartTooltipContent hideLabel />}
             />
             <Pie
-              data={chartData}
+              data={[
+                {
+                  storage: "used",
+                  space: Math.floor(sizeInMB),
+                  fill: "#f9fafb",
+                },
+                {
+                  storage: "left",
+                  space: Math.floor(TOTAL_SPACE_AVAILABLE_IN_MB - sizeInMB),
+                  fill: "#d1d5dc",
+                },
+              ]}
               dataKey="space"
               nameKey="storage"
               innerRadius={75}
@@ -68,7 +80,7 @@ const AvailableSpaceCard = () => {
                           className="text-5xl font-bold"
                           fill="#fff"
                         >
-                          65%
+                          {percentage}%
                         </tspan>
                         <tspan
                           x={viewBox.cx}
