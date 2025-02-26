@@ -1,3 +1,4 @@
+import { LucideIcon } from "lucide-react";
 import z from "zod";
 
 export type User = {
@@ -13,10 +14,25 @@ export type UserData = {
 };
 
 export type SummaryDataType = {
-  media: number;
+  application: number;
+  audio: number;
+  video: number;
   image: number;
-  document: number;
-  other: number;
+};
+
+export type SummaryDataItem = {
+  title: string;
+  size: number;
+  icon: LucideIcon;
+  url: string;
+  iconBgColor: string;
+};
+
+export type RecentFileUplodedItem = {
+  name: string;
+  createdAt: Date;
+  icon: LucideIcon;
+  iconBgColor: string;
 };
 
 const AuthTypeSchema = z.enum(["sign-up", "sign-in"]);
