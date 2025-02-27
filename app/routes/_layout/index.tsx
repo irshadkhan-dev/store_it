@@ -35,12 +35,12 @@ export const Route = createFileRoute("/_layout/")({
   component: RouteComponent,
   loader: async ({ context }) => {
     const user = context.queryClient.getQueryData<UserData>(["user"]);
-    return user;
+    return { user };
   },
 });
 
 function RouteComponent() {
-  const user = Route.useLoaderData();
+  const { user } = Route.useLoaderData();
 
   const { data, isError, isLoading } = useQuery({
     queryKey: ["allFiles"],
@@ -54,11 +54,11 @@ function RouteComponent() {
   const spaceSummary = getSpaceSummary({ data: data! });
   const totalSpaceUsed = getTotalSpace({ data: data! });
 
-  if (isError) return <ErrorComp />;
-  if (isLoading) return <Loading />;
-
   const cardSummary = getUsageSummary(spaceSummary);
   const recentFiles = getRecentFileUploaded({ data: data! });
+
+  if (isError) return <ErrorComp />;
+  if (isLoading) return <Loading />;
 
   return (
     <div className="mx-auto grid grid-cols-1 gap-6 lg:grid-cols-2 xl:gap-10">
@@ -84,12 +84,13 @@ function RouteComponent() {
           Recent Files Uploaded
         </h2>
         <div className="flex flex-col space-y-4 mt-4">
-          {recentFiles.map((item) => (
+          {recentFiles.map((item, i) => (
             <RecentFileCard
               name={item.name}
               icon={item.icon}
               iconBgColor={item.iconBgColor}
               createdAt={item.createdAt}
+              key={i}
             />
           ))}
         </div>
