@@ -1,6 +1,4 @@
 import { UploadCloudIcon } from "lucide-react";
-import { createContext, useState } from "react";
-import UploadDropzone from "./UploadDropzone";
 
 const UploadBtn = ({
   setDropZoneActive,

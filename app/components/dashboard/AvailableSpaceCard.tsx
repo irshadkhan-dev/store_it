@@ -1,13 +1,4 @@
-import { TrendingUp } from "lucide-react";
-import {
-  Label,
-  Pie,
-  PieChart,
-  PolarGrid,
-  PolarRadiusAxis,
-  RadialBar,
-  RadialBarChart,
-} from "recharts";
+import { Label, Pie, PieChart } from "recharts";
 
 import {
   ChartConfig,

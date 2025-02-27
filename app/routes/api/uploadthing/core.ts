@@ -1,5 +1,6 @@
 import db from "@/db";
 import { filesTable } from "@/db/schema";
+import { getFileType } from "@/utils/helperFunc";
 import { getAuth } from "@clerk/tanstack-start/server";
 import { createUploadthing, UploadThingError } from "uploadthing/server";
 import type { FileRouter } from "uploadthing/server";
@@ -30,7 +31,7 @@ export const uploadRouter = {
     .onUploadComplete(async ({ metadata, file }) => {
       console.log("Upload by", metadata.userId);
       console.log("File url", file.ufsUrl);
-      const customeFileType = file.type.split("/")[0];
+      const customeFileType = getFileType(file.type.split("/")[0]);
 
       await db.insert(filesTable).values({
         ownerId: metadata.userId,

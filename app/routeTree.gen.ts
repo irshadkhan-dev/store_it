@@ -15,7 +15,7 @@ import { Route as LayoutImport } from './routes/_layout'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
 import { Route as AuthSsoCallbackIndexImport } from './routes/auth/sso-callback/index'
 import { Route as AuthAuthPageIndexImport } from './routes/auth/auth-page/index'
-import { Route as LayoutImagesIndexImport } from './routes/_layout/images/index'
+import { Route as LayoutFileTypeImport } from './routes/_layout/_.$fileType'
 
 // Create/Update Routes
 
@@ -42,9 +42,9 @@ const AuthAuthPageIndexRoute = AuthAuthPageIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const LayoutImagesIndexRoute = LayoutImagesIndexImport.update({
-  id: '/images/',
-  path: '/images/',
+const LayoutFileTypeRoute = LayoutFileTypeImport.update({
+  id: '/_/$fileType',
+  path: '/$fileType',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -66,11 +66,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
     }
-    '/_layout/images/': {
-      id: '/_layout/images/'
-      path: '/images'
-      fullPath: '/images'
-      preLoaderRoute: typeof LayoutImagesIndexImport
+    '/_layout/_/$fileType': {
+      id: '/_layout/_/$fileType'
+      path: '/$fileType'
+      fullPath: '/$fileType'
+      preLoaderRoute: typeof LayoutFileTypeImport
       parentRoute: typeof LayoutImport
     }
     '/auth/auth-page/': {
@@ -94,12 +94,12 @@ declare module '@tanstack/react-router' {
 
 interface LayoutRouteChildren {
   LayoutIndexRoute: typeof LayoutIndexRoute
-  LayoutImagesIndexRoute: typeof LayoutImagesIndexRoute
+  LayoutFileTypeRoute: typeof LayoutFileTypeRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutIndexRoute: LayoutIndexRoute,
-  LayoutImagesIndexRoute: LayoutImagesIndexRoute,
+  LayoutFileTypeRoute: LayoutFileTypeRoute,
 }
 
 const LayoutRouteWithChildren =
@@ -108,14 +108,14 @@ const LayoutRouteWithChildren =
 export interface FileRoutesByFullPath {
   '': typeof LayoutRouteWithChildren
   '/': typeof LayoutIndexRoute
-  '/images': typeof LayoutImagesIndexRoute
+  '/$fileType': typeof LayoutFileTypeRoute
   '/auth/auth-page': typeof AuthAuthPageIndexRoute
   '/auth/sso-callback': typeof AuthSsoCallbackIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof LayoutIndexRoute
-  '/images': typeof LayoutImagesIndexRoute
+  '/$fileType': typeof LayoutFileTypeRoute
   '/auth/auth-page': typeof AuthAuthPageIndexRoute
   '/auth/sso-callback': typeof AuthSsoCallbackIndexRoute
 }
@@ -124,21 +124,21 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_layout': typeof LayoutRouteWithChildren
   '/_layout/': typeof LayoutIndexRoute
-  '/_layout/images/': typeof LayoutImagesIndexRoute
+  '/_layout/_/$fileType': typeof LayoutFileTypeRoute
   '/auth/auth-page/': typeof AuthAuthPageIndexRoute
   '/auth/sso-callback/': typeof AuthSsoCallbackIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/' | '/images' | '/auth/auth-page' | '/auth/sso-callback'
+  fullPaths: '' | '/' | '/$fileType' | '/auth/auth-page' | '/auth/sso-callback'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/images' | '/auth/auth-page' | '/auth/sso-callback'
+  to: '/' | '/$fileType' | '/auth/auth-page' | '/auth/sso-callback'
   id:
     | '__root__'
     | '/_layout'
     | '/_layout/'
-    | '/_layout/images/'
+    | '/_layout/_/$fileType'
     | '/auth/auth-page/'
     | '/auth/sso-callback/'
   fileRoutesById: FileRoutesById
@@ -175,15 +175,15 @@ export const routeTree = rootRoute
       "filePath": "_layout.tsx",
       "children": [
         "/_layout/",
-        "/_layout/images/"
+        "/_layout/_/$fileType"
       ]
     },
     "/_layout/": {
       "filePath": "_layout/index.tsx",
       "parent": "/_layout"
     },
-    "/_layout/images/": {
-      "filePath": "_layout/images/index.tsx",
+    "/_layout/_/$fileType": {
+      "filePath": "_layout/_.$fileType.tsx",
       "parent": "/_layout"
     },
     "/auth/auth-page/": {

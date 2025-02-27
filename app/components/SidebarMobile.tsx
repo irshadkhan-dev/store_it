@@ -1,8 +1,8 @@
 import { CircleX } from "lucide-react";
-import UploadBtn from "./UploadBtn";
-import { cn } from "../utils/helperFunc";
-import { SidebarFolderData } from "../utils/data";
-import SidebarFolderBtn from "./SidebarFolderBtn";
+import UploadBtn from "@/components/UploadBtn";
+import { cn } from "@/utils/helperFunc";
+import { SidebarFolderData } from "@/utils/data";
+import SidebarFolderBtn from "@/components/SidebarFolderBtn";
 
 const SidebarMobile = ({
   open,

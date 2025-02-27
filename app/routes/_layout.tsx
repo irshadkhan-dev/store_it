@@ -2,11 +2,13 @@ import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 
 import UploadDropzone from "@/components/UploadDropzone";
+
 import { UserData } from "@/types/auth";
 
 import { clerkClient, getAuth } from "@clerk/tanstack-start/server";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/start";
+
 import { useState } from "react";
 import { getWebRequest } from "vinxi/http";
 

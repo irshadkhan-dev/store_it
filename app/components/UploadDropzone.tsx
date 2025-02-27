@@ -11,6 +11,7 @@ import {
 
 import { useUploadThing } from "@/components/ui/uploadthing";
 import { cn } from "@/lib/utils";
+import { getFileType } from "@/utils/helperFunc";
 
 const UploadDropzone = ({
   setDropZoneActive,

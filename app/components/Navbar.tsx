@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-
 import { LogOut, Search, Sidebar } from "lucide-react";
+import { cn } from "@/utils/helperFunc";
 
-import { cn } from "../utils/helperFunc";
-import MaxWidthwrapper from "./MaxWidthwrapper";
-import SidebarMobile from "./SidebarMobile";
-import UploadBtn from "./UploadBtn";
+import SidebarMobile from "@/components/SidebarMobile";
+import UploadBtn from "@/components/UploadBtn";
 
 const Navbar = ({
   setDropZoneActive,

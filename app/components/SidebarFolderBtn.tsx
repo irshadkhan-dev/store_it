@@ -1,5 +1,5 @@
 import { LucideIcon } from "lucide-react";
-import { cn } from "../utils/helperFunc";
+import { cn } from "@/utils/helperFunc";
 import { Link, useLocation } from "@tanstack/react-router";
 
 const SidebarFolderBtn = ({

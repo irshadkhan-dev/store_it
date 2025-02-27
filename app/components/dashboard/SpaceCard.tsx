@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { convertFileSize } from "@/utils/helperFunc";
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { LucideIcon, Video } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 
 const SpaceCard = ({
   className,
@@ -54,7 +54,7 @@ const SpaceCard = ({
         </span>
 
         <div className="text-[#333F4E] text-base font-normal text-center">
-          {formattedDate}
+          {size > 0 ? formattedDate : "No uploads"}
         </div>
       </div>
     </Link>
