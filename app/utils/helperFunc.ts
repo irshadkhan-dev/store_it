@@ -8,6 +8,7 @@ export const cn = (...inputs: ClassValue[]) => {
 import { DB_FileType } from "@/db/schema";
 import { RecentFileUplodedItem } from "@/types/auth";
 import {
+  CirclePlay,
   FileJson,
   FolderOpenDot,
   Images,
@@ -36,14 +37,12 @@ export const TOTAL_SPACE_AVAILABLE_IN_MB = 2048;
 
 const getFileIcon = (fileType: string) => {
   switch (fileType) {
-    case "application":
+    case "document":
       return FolderOpenDot as LucideIcon;
     case "image":
       return Images as LucideIcon;
-    case "video":
-      return Video as LucideIcon;
-    case "audio":
-      return Music as LucideIcon;
+    case "media":
+      return CirclePlay as LucideIcon;
     default:
       return FileJson as LucideIcon;
   }
@@ -51,16 +50,29 @@ const getFileIcon = (fileType: string) => {
 
 const getIconBgColor = (fileType: string) => {
   switch (fileType) {
-    case "application":
+    case "document":
       return "#FF7474";
     case "image":
       return "#56B8FF";
-    case "video":
+    case "media":
       return "#3DD9B3";
-    case "music":
-      return "#EEA8FD";
     default:
       return "#EEA8FD";
+  }
+};
+
+export const getFileType = (fileType: string) => {
+  switch (fileType) {
+    case "application":
+      return "document";
+    case "image":
+      return "image";
+    case "video":
+      return "media";
+    case "music":
+      return "media";
+    default:
+      return "others";
   }
 };
 
@@ -80,37 +92,37 @@ export const convertFileSize = (sizeInBytes: number, digits?: number) => {
 };
 
 export const getSpaceUsedSummary = ({ data }: { data: DB_FileType[] }) => {
-  const summarisedData = data?.reduce(
-    (accumulator, currentValue) => {
-      if (!accumulator[currentValue.fileType]) {
-        accumulator[currentValue.fileType] = {
-          size: 0,
-          lastUpdated: new Date(0),
-        };
-      }
-
-      const totalSize = Math.floor(
-        accumulator[currentValue.fileType].size + currentValue.size
-      );
-
-      const currentDate = new Date(currentValue.createdAt);
-      const lastUpdated = new Date(
-        Math.max(
-          currentDate.getTime(),
-          accumulator[currentValue.fileType].lastUpdated.getTime()
-        )
-      );
-
-      accumulator[currentValue.fileType] = {
-        size: totalSize,
-        lastUpdated,
-      };
-
-      return accumulator;
+  const initialSummarisedData: SummaryDataType = {
+    document: {
+      size: 0,
+      lastUpdated: new Date(0),
     },
-    {} as Record<string, { size: number; lastUpdated: Date }>
-  );
-  return summarisedData;
+    image: {
+      size: 0,
+      lastUpdated: new Date(0),
+    },
+    media: {
+      size: 0,
+      lastUpdated: new Date(0),
+    },
+    others: {
+      size: 0,
+      lastUpdated: new Date(0),
+    },
+  };
+
+  return data?.reduce((acc, item) => {
+    const fileType = item.fileType;
+    const currentDate = new Date(item.createdAt);
+
+    acc[fileType].size += item.size;
+    acc[fileType].lastUpdated =
+      currentDate > acc[fileType].lastUpdated
+        ? currentDate
+        : acc[fileType].lastUpdated;
+
+    return acc;
+  }, initialSummarisedData);
 };
 
 export const getTotalSpaceUsed = ({ data }: { data: DB_FileType[] }) => {
@@ -141,30 +153,32 @@ export const getRecentFileUploaded = ({
   }));
 };
 
+export const getRelevantFile = ({ data }: { data: DB_FileType[] }) => {};
+
 export const getUsageSummary = (
   spaceSummary: SummaryDataType
 ): SummaryDataItem[] => {
   return [
     {
       title: "Documents",
-      size: spaceSummary.application.size,
-      lastUpdated: spaceSummary.application.lastUpdated,
+      size: spaceSummary?.document?.size || 0,
+      lastUpdated: spaceSummary?.document?.lastUpdated || new Date(0),
       icon: FolderOpenDot,
       url: "/document",
       iconBgColor: "#FF7474",
     },
     {
       title: "Images",
-      size: spaceSummary.image.size,
-      lastUpdated: spaceSummary.image.lastUpdated,
+      size: spaceSummary?.image?.size || 0,
+      lastUpdated: spaceSummary?.image?.lastUpdated || new Date(0),
       icon: Images,
       url: "/images",
       iconBgColor: "#56B8FF",
     },
     {
       title: "Video",
-      size: spaceSummary.video.size,
-      lastUpdated: spaceSummary.video.lastUpdated,
+      size: spaceSummary?.media?.size || 0,
+      lastUpdated: spaceSummary?.media?.lastUpdated || new Date(0),
       icon: Video,
       url: "/media",
       iconBgColor: "#3DD9B3",
