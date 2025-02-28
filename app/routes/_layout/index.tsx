@@ -10,7 +10,6 @@ import { useQuery } from "@tanstack/react-query";
 import Loading from "@/components/Loading";
 import SpaceCard from "@/components/dashboard/SpaceCard";
 
-import { UserData } from "@/types/auth";
 import {
   getRecentFileUploaded,
   getSpaceUsedSummary,
@@ -34,7 +33,7 @@ const getAllFile = createServerFn({ method: "GET" })
 export const Route = createFileRoute("/_layout/")({
   component: RouteComponent,
   loader: async ({ context }) => {
-    const user = context.queryClient.getQueryData<UserData>(["user"]);
+    const user = context.userId;
     return { user };
   },
 });
@@ -44,7 +43,7 @@ function RouteComponent() {
 
   const { data, isError, isLoading } = useQuery({
     queryKey: ["allFiles"],
-    queryFn: async () => await getAllFile({ data: user?.id! }),
+    queryFn: async () => await getAllFile({ data: user.userId }),
     staleTime: Infinity,
   });
 

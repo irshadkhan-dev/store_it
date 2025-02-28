@@ -8,6 +8,8 @@ import { ClerkProvider } from "@clerk/tanstack-start";
 import { NotFound } from "@/components/NotFound";
 import { Toaster } from "react-hot-toast";
 
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
 }>()({
@@ -55,6 +57,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <body>
           {children}
           <Toaster position="top-right" />
+          <ReactQueryDevtools initialIsOpen={false} />
           <Scripts />
         </body>
       </html>

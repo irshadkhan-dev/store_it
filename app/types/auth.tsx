@@ -8,9 +8,9 @@ export type User = {
 };
 
 export type UserData = {
-  id: string | undefined;
-  email: string | undefined;
-  firstName: string | null | undefined;
+  id: string;
+  email: string;
+  firstName: string;
 };
 
 export type SummaryDataType = {

@@ -31,7 +31,7 @@ export const SidebarFolderData: SidebarFolder[] = [
     id: 3,
     name: "Images",
     icon: Image,
-    link: "/images",
+    link: "/image",
   },
   {
     id: 4,

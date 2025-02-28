@@ -1,13 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { UserData } from "@/types/auth";
 import db from "@/db";
 import { filesTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { createServerFn } from "@tanstack/start";
-import Loading from "@/components/Loading";
-import ErrorComp from "@/components/Error";
+
 import {
   Select,
   SelectContent,
@@ -16,8 +14,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
+import { getRelevantFile } from "@/utils/helperFunc";
 
-type SORTING_OPTION = "newest" | "oldest";
+export type SORTING_OPTION = "newest" | "oldest";
 
 const getAllFile = createServerFn({ method: "GET" })
   .validator((data: string) => data)
@@ -32,7 +31,7 @@ const getAllFile = createServerFn({ method: "GET" })
 export const Route = createFileRoute("/_layout/_/$fileType")({
   component: RouteComponent,
   loader: async ({ context, params }) => {
-    const user = context.queryClient.getQueryData<UserData>(["user"]);
+    const user = context.userId;
     return { params, user };
   },
 });
@@ -45,12 +44,15 @@ function RouteComponent() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["allFiles"],
-    queryFn: async () => await getAllFile({ data: user.id! }),
+    queryFn: async () => await getAllFile({ data: user.userId }),
     staleTime: Infinity,
   });
 
-  if (isLoading) return <Loading />;
-  if (isError) return <ErrorComp />;
+  const d = getRelevantFile({
+    sortBy: sortingOption,
+    data: data!,
+    fileType: params.fileType,
+  });
 
   return (
     <div className="flex flex-col space-y-4">

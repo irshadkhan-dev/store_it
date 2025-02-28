@@ -13,9 +13,9 @@ import {
   FolderOpenDot,
   Images,
   LucideIcon,
-  Music,
   Video,
 } from "lucide-react";
+import { SORTING_OPTION } from "@/routes/_layout/_.$fileType";
 
 export type SummaryDataItem = {
   title: string;
@@ -69,7 +69,7 @@ export const getFileType = (fileType: string) => {
       return "image";
     case "video":
       return "media";
-    case "music":
+    case "audio":
       return "media";
     default:
       return "others";
@@ -153,7 +153,28 @@ export const getRecentFileUploaded = ({
   }));
 };
 
-export const getRelevantFile = ({ data }: { data: DB_FileType[] }) => {};
+export const getRelevantFile = ({
+  sortBy,
+  fileType,
+  data,
+}: {
+  sortBy: SORTING_OPTION;
+  fileType: string;
+  data: DB_FileType[];
+}) => {
+  //first we will filter the files from data which are relevant to its page
+  const relevantFileByPage = data.filter(
+    (curFile) => curFile.fileType === fileType
+  );
+
+  const relevantFileSortedByPage = relevantFileByPage.sort((a, b) =>
+    sortBy === "newest"
+      ? a.createdAt.getTime() - b.createdAt.getTime()
+      : b.createdAt.getTime() - a.createdAt.getTime()
+  );
+
+  return relevantFileSortedByPage as DB_FileType[];
+};
 
 export const getUsageSummary = (
   spaceSummary: SummaryDataType
