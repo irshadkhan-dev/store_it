@@ -6,7 +6,7 @@ export const cn = (...inputs: ClassValue[]) => {
 };
 
 import { DB_FileType } from "@/db/schema";
-import { RecentFileUplodedItem } from "@/types/auth";
+import { RecentFileUplodedItem, SORTING_OPTION } from "@/types/auth";
 import {
   CirclePlay,
   FileJson,
@@ -15,7 +15,6 @@ import {
   LucideIcon,
   Video,
 } from "lucide-react";
-import { SORTING_OPTION } from "@/routes/_layout/_.$fileType";
 
 export type SummaryDataItem = {
   title: string;
@@ -34,6 +33,54 @@ export type SummaryDataType = {
 };
 
 export const TOTAL_SPACE_AVAILABLE_IN_MB = 2048;
+
+export const getFileIconByExtention = (fileType: string) => {
+  const extension = fileType.split(".").pop()?.toLocaleLowerCase();
+  switch (extension) {
+    // Document
+    case "pdf":
+      return "/pdf.svg";
+    case "doc":
+      return "/doc.svg";
+    case "docx":
+      return "/docX.svg";
+    case "csv":
+      return "/csv.svg";
+    case "txt":
+      return "/txt.svg";
+    case "xls":
+    case "xlsx":
+      return "/document.svg";
+    // Image
+    case "svg":
+      return "/assets/icons/file-image.svg";
+    // Video
+    case "mkv":
+    case "mov":
+    case "avi":
+    case "wmv":
+    case "mp4":
+    case "flv":
+    case "webm":
+    case "m4v":
+    case "3gp":
+      return "/video.svg";
+    // Audio
+    case "mp3":
+    case "mpeg":
+    case "wav":
+    case "aac":
+    case "flac":
+    case "ogg":
+    case "wma":
+    case "m4a":
+    case "aiff":
+    case "alac":
+      return "/audio.svg";
+    default:
+      return "";
+  }
+};
 
 const getFileIcon = (fileType: string) => {
   switch (fileType) {
@@ -76,7 +123,10 @@ export const getFileType = (fileType: string) => {
   }
 };
 
-export const convertFileSize = (sizeInBytes: number, digits?: number) => {
+export const convertFileSize = (
+  sizeInBytes: number,
+  digits?: number
+): string => {
   if (sizeInBytes < 1024) {
     return sizeInBytes + " Bytes";
   } else if (sizeInBytes < 1024 * 1024) {
@@ -162,15 +212,14 @@ export const getRelevantFile = ({
   fileType: string;
   data: DB_FileType[];
 }) => {
-  //first we will filter the files from data which are relevant to its page
-  const relevantFileByPage = data.filter(
+  const relevantFileByPage = data?.filter(
     (curFile) => curFile.fileType === fileType
   );
 
   const relevantFileSortedByPage = relevantFileByPage.sort((a, b) =>
     sortBy === "newest"
-      ? a.createdAt.getTime() - b.createdAt.getTime()
-      : b.createdAt.getTime() - a.createdAt.getTime()
+      ? b.createdAt.getTime() - a.createdAt.getTime()
+      : a.createdAt.getTime() - b.createdAt.getTime()
   );
 
   return relevantFileSortedByPage as DB_FileType[];
