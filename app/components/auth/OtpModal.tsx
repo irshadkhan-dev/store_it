@@ -27,7 +27,7 @@ const OtpModal = ({
   };
 
   return (
-    <div className="w-full fixed h-screen bg-black/20 flex items-center justify-center">
+    <div className="w-full fixed h-screen bg-black/20 flex items-center justify-center max-md:px-16">
       <div className="w-[32rem] p-4 rounded-lg bg-white shadow-2xl">
         <div className="w-full flex flex-col space-y-5 items-center py-4">
           <div className="">

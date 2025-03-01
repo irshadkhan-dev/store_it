@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LogOut, Search, Sidebar } from "lucide-react";
+import { LogOut, Rabbit, Search, Sidebar } from "lucide-react";
 import { cn } from "@/utils/helperFunc";
 
 import SidebarMobile from "@/components/SidebarMobile";
@@ -33,8 +33,9 @@ const Navbar = ({
       <div className="flex w-full flex-row items-center justify-between space-x-10">
         <div className="flex flex-row items-center space-x-16">
           <div className="flex items-center space-x-2">
-            <span className="text-2xl font-semibold text-[#FA7275]">
-              Storage
+            <span className="text-2xl font-semibold text-[#FA7275] flex items-end">
+              <Rabbit className="h-10 w-10" />
+              <span className="">Store_It</span>
             </span>
           </div>
 

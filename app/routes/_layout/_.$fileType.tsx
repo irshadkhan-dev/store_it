@@ -1,11 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
-import db from "@/db";
-import { filesTable } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { createServerFn } from "@tanstack/start";
-
 import {
   Select,
   SelectContent,
@@ -13,58 +8,54 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
-import { getRelevantFile } from "@/utils/helperFunc";
-
-export type SORTING_OPTION = "newest" | "oldest";
-
-const getAllFile = createServerFn({ method: "GET" })
-  .validator((data: string) => data)
-  .handler(async (ctx) => {
-    return await db
-      .select()
-      .from(filesTable)
-      .where(eq(filesTable.ownerId, ctx.data))
-      .orderBy(filesTable.createdAt);
-  });
+import { useCallback, useState } from "react";
+import {
+  convertFileSize,
+  getFileIconByExtention,
+  getRelevantFile,
+  getSpaceUsedSummary,
+} from "@/utils/helperFunc";
+import { getAllFile } from "@/serverFn/serverFn";
+import { SORTING_OPTION } from "@/types/auth";
+import FileCard from "@/components/FileCard";
+import { Rabbit } from "lucide-react";
 
 export const Route = createFileRoute("/_layout/_/$fileType")({
   component: RouteComponent,
   loader: async ({ context, params }) => {
-    const user = context.userId;
-    return { params, user };
+    const { userId } = context;
+    return { params, userId };
   },
 });
 
 function RouteComponent() {
-  const { params, user } = Route.useLoaderData();
-  if (!user) return null;
-
+  const { params, userId } = Route.useLoaderData();
   const [sortingOption, setSortingOptions] = useState<SORTING_OPTION>("newest");
 
-  const { data, isLoading, isError } = useQuery({
+  const { data } = useQuery({
     queryKey: ["allFiles"],
-    queryFn: async () => await getAllFile({ data: user.userId }),
+    queryFn: async () => await getAllFile({ data: userId }),
     staleTime: Infinity,
   });
 
-  const d = getRelevantFile({
-    sortBy: sortingOption,
+  const relavantFile = getRelevantFile({
     data: data!,
+    sortBy: sortingOption,
     fileType: params.fileType,
   });
 
+  const totalSpaceUsed = getSpaceUsedSummary({ data: data! });
+  const totalSpace = convertFileSize(totalSpaceUsed[params.fileType]?.size);
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="h-full flex flex-col space-y-4">
       <div>
         <h1 className="text-3xl font-semibold text-gray-700">{`${params.fileType[0].toLocaleUpperCase()}${params.fileType.slice(1)}`}</h1>
         <div className="flex justify-between items-center">
           <div>
-            Total: <span>100Mb</span>
+            Total: <span>{totalSpace}</span>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <span className="w-full">Sort by:</span>
+          <div className="">
             <Select
               onValueChange={(value: SORTING_OPTION) =>
                 setSortingOptions(value)
@@ -82,6 +73,32 @@ function RouteComponent() {
           </div>
         </div>
       </div>
+      {relavantFile.length === 0 ? (
+        <>
+          <div className="flex flex-col items-center justify-center h-full ">
+            <Rabbit className="w-40 h-40 text-gray-400" />
+            <span className="text-4xl text-gray-400">No File Uploads</span>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-5">
+            {relavantFile.map((file) => (
+              <FileCard
+                key={file.id}
+                name={file.name}
+                size={convertFileSize(file.size)}
+                createdAt={file.createdAt}
+                url={
+                  file.fileType === "image"
+                    ? file.url
+                    : getFileIconByExtention(file.name)
+                }
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

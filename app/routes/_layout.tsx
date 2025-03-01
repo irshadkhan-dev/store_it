@@ -3,7 +3,9 @@ import Sidebar from "@/components/Sidebar";
 
 import UploadDropzone from "@/components/UploadDropzone";
 
-import { clerkClient, getAuth } from "@clerk/tanstack-start/server";
+import { getAllFile } from "@/serverFn/serverFn";
+
+import { getAuth } from "@clerk/tanstack-start/server";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/start";
 
@@ -24,15 +26,21 @@ const authStateFn = createServerFn({ method: "GET" }).handler(async () => {
 
 export const Route = createFileRoute("/_layout")({
   beforeLoad: async () => {
-    const userId = await authStateFn();
+    const { userId } = await authStateFn();
     return { userId };
   },
+
   component: RouteComponent,
   loader: async ({ context }) => {
-    const { userId } = context.userId;
-
+    const { userId } = context;
+    await context.queryClient.prefetchQuery({
+      queryKey: ["allFiles"],
+      queryFn: async () => await getAllFile({ data: userId }),
+      staleTime: Infinity,
+    });
     return { userId };
   },
+  staleTime: Infinity,
 });
 
 function RouteComponent() {

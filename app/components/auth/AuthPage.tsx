@@ -84,7 +84,7 @@ const AuthPage = () => {
       {isVerifying && (
         <OtpModal handleEmailVerification={handleEmailVerification} />
       )}
-      <div className="w-full flex flex-row h-screen">
+      <div className="w-full flex flex-row h-[100vh]">
         <div className="hidden h-screen md:flex flex-col min-w-80 p-10 space-y-10 lg:p-20 bg-[#FA7275]">
           <div className="flex flex-row items-center">
             <img
@@ -109,8 +109,8 @@ const AuthPage = () => {
           </div>
         </div>
 
-        <div className="w-full flex items-center justify-center max-md:p-10">
-          <div className="flex flex-col space-y-4 max-w-lg w-full px-10">
+        <div className="w-full flex items-center justify-center max-md:p-10 max-md:bg-[#FA7275]">
+          <div className="flex flex-col space-y-4 max-w-lg w-full  bg-white p-5 px-10 rounded-2xl">
             <div className="flex flex-col w-full space-y-10">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -158,7 +158,7 @@ const AuthPage = () => {
             <div className="text-3xl font-bold text-center font-[italic]">
               Or,
             </div>
-            <div className="flex items-center justify-center space-x-16">
+            <div className="flex max-md:flex-col space-y-4 justify-center space-x-16">
               <SignUpBtn
                 provider="oauth_google"
                 providerName="Google"

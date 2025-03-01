@@ -1,13 +1,8 @@
 import AvailableSpaceCard from "@/components/dashboard/AvailableSpaceCard";
-import db from "@/db";
-import { filesTable } from "@/db/schema";
 
 import { createFileRoute } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/start";
-import { eq } from "drizzle-orm";
 
 import { useQuery } from "@tanstack/react-query";
-import Loading from "@/components/Loading";
 import SpaceCard from "@/components/dashboard/SpaceCard";
 
 import {
@@ -18,32 +13,24 @@ import {
 } from "@/utils/helperFunc";
 import { useCallback } from "react";
 import RecentFileCard from "@/components/dashboard/RecentFileUploads";
-import ErrorComp from "@/components/Error";
-
-const getAllFile = createServerFn({ method: "GET" })
-  .validator((data: string) => data)
-  .handler(async (ctx) => {
-    return await db
-      .select()
-      .from(filesTable)
-      .where(eq(filesTable.ownerId, ctx.data))
-      .orderBy(filesTable.createdAt);
-  });
+import { getAllFile } from "@/serverFn/serverFn";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Rabbit } from "lucide-react";
 
 export const Route = createFileRoute("/_layout/")({
   component: RouteComponent,
   loader: async ({ context }) => {
-    const user = context.userId;
-    return { user };
+    const { userId } = context;
+    return { userId };
   },
 });
 
 function RouteComponent() {
-  const { user } = Route.useLoaderData();
+  const { userId } = Route.useLoaderData();
 
-  const { data, isError, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["allFiles"],
-    queryFn: async () => await getAllFile({ data: user.userId }),
+    queryFn: async () => await getAllFile({ data: userId }),
     staleTime: Infinity,
   });
 
@@ -55,9 +42,6 @@ function RouteComponent() {
 
   const cardSummary = getUsageSummary(spaceSummary);
   const recentFiles = getRecentFileUploaded({ data: data! });
-
-  if (isError) return <ErrorComp />;
-  if (isLoading) return <Loading />;
 
   return (
     <div className="mx-auto grid grid-cols-1 gap-6 lg:grid-cols-2 xl:gap-10">
@@ -82,17 +66,31 @@ function RouteComponent() {
         <h2 className="text-2xl font-bold text-neutral-700">
           Recent Files Uploaded
         </h2>
-        <div className="flex flex-col space-y-4 mt-4">
-          {recentFiles.map((item, i) => (
-            <RecentFileCard
-              name={item.name}
-              icon={item.icon}
-              iconBgColor={item.iconBgColor}
-              createdAt={item.createdAt}
-              key={i}
-            />
-          ))}
-        </div>
+
+        {recentFiles.length === 0 ? (
+          <>
+            <div className="h-full flex flex-col items-center justify-center">
+              <Rabbit className="w-32 h-32 text-gray-400" />
+              <span className="text-2xl text-gray-400">No File Uploads</span>
+            </div>
+          </>
+        ) : (
+          <>
+            <ScrollArea className="h-[75vh]">
+              <div className="flex flex-col space-y-4 mt-4">
+                {recentFiles.map((item, i) => (
+                  <RecentFileCard
+                    name={item.name}
+                    icon={item.icon}
+                    iconBgColor={item.iconBgColor}
+                    createdAt={item.createdAt}
+                    key={i}
+                  />
+                ))}
+              </div>
+            </ScrollArea>
+          </>
+        )}
       </div>
     </div>
   );

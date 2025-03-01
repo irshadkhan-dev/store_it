@@ -35,6 +35,8 @@ export type RecentFileUplodedItem = {
   iconBgColor: string;
 };
 
+export type SORTING_OPTION = "newest" | "oldest";
+
 const AuthTypeSchema = z.enum(["sign-up", "sign-in"]);
 export type AuthType = z.infer<typeof AuthTypeSchema>;
 
