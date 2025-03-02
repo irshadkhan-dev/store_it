@@ -1,4 +1,4 @@
-import React, { JSX, SVGProps } from "react";
+import { JSX, SVGProps } from "react";
 import { useSignUp } from "@clerk/tanstack-start";
 import { OAuthStrategy } from "@clerk/types";
 import toast from "react-hot-toast";
@@ -32,7 +32,7 @@ const SignUpBtn = ({
   return (
     <button
       onClick={() => signUpWith(provider)}
-      className="bg-[#FA7275] w-full flex items-center justify-center space-x-2 py-2 px-2 cursor-pointer rounded-2xl "
+      className="bg-[#FA7275] w-full flex items-center justify-center space-x-2 py-2 px-2 cursor-pointer rounded-2xl"
     >
       <Icon className="text-3xl" />
       <span className="text-white font-semibold text-2xl">{providerName}</span>

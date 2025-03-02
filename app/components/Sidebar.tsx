@@ -3,7 +3,6 @@ import { SidebarFolderData } from "../utils/data";
 import SidebarFolderBtn from "./SidebarFolderBtn";
 import { createServerFn } from "@tanstack/start";
 import { clerkClient } from "@clerk/tanstack-start/server";
-
 import { useQuery } from "@tanstack/react-query";
 
 const userInfoFn = createServerFn({ method: "GET" })
@@ -12,10 +11,12 @@ const userInfoFn = createServerFn({ method: "GET" })
     const client = clerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
     const userData = ctx.data ? await client.users.getUser(ctx.data) : null;
+
     const user = {
       id: userData?.id!,
       email: userData?.emailAddresses[0].emailAddress!,
       firstName: userData?.firstName!,
+      imgUrl: userData?.imageUrl,
     };
     return user;
   });
@@ -47,8 +48,12 @@ const Sidebar = ({
       </div>
       <div className="pt-7">
         <div className="flex flex-row items-center space-x-2 rounded-lg bg-[#F2F4F8] p-2 ">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black text-center text-xl font-bold text-white">
-            A
+          <div className="flex h-12 w-12 items-center justify-center ">
+            <img
+              src={data?.imgUrl}
+              alt=""
+              className="h-full w-full rounded-full"
+            />
           </div>
           <div className="flex flex-col">
             <span>{data?.firstName}</span>

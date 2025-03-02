@@ -1,7 +1,5 @@
 import AvailableSpaceCard from "@/components/dashboard/AvailableSpaceCard";
-
 import { createFileRoute } from "@tanstack/react-router";
-
 import { useQuery } from "@tanstack/react-query";
 import SpaceCard from "@/components/dashboard/SpaceCard";
 
@@ -11,7 +9,7 @@ import {
   getTotalSpaceUsed,
   getUsageSummary,
 } from "@/utils/helperFunc";
-import { useCallback } from "react";
+
 import RecentFileCard from "@/components/dashboard/RecentFileUploads";
 import { getAllFile } from "@/serverFn/serverFn";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -34,11 +32,8 @@ function RouteComponent() {
     staleTime: Infinity,
   });
 
-  const getTotalSpace = useCallback(getTotalSpaceUsed, [data]);
-  const getSpaceSummary = useCallback(getSpaceUsedSummary, [data]);
-
-  const spaceSummary = getSpaceSummary({ data: data! });
-  const totalSpaceUsed = getTotalSpace({ data: data! });
+  const spaceSummary = getSpaceUsedSummary({ data: data! });
+  const totalSpaceUsed = getTotalSpaceUsed({ data: data! });
 
   const cardSummary = getUsageSummary(spaceSummary);
   const recentFiles = getRecentFileUploaded({ data: data! });
