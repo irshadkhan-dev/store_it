@@ -17,10 +17,9 @@ const UploadDropzone = ({
 }: {
   setDropZoneActive: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const queryClient = useQueryClient();
   const modalRef = useRef<HTMLDivElement>(null);
   const dropZoneRef = useRef<HTMLDivElement | null>(null);
-
+  const queryClient = useQueryClient();
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -56,10 +55,9 @@ const UploadDropzone = ({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop(acceptedFiles) {
       toast.promise(() => startUpload(acceptedFiles), {
-        loading: () => {
-          return <b>Uploading files...</b>;
-        },
-        success: <b>Uploading Resolved.</b>,
+        loading: <b>Uploading files...</b>,
+        success: <b>Uploading Resoove</b>,
+
         error: "Error while uploading file. Please try again.",
       });
     },

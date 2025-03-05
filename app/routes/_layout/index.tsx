@@ -1,8 +1,5 @@
 import AvailableSpaceCard from "@/components/dashboard/AvailableSpaceCard";
-
 import { createFileRoute } from "@tanstack/react-router";
-
-import { useQuery } from "@tanstack/react-query";
 import SpaceCard from "@/components/dashboard/SpaceCard";
 
 import {
@@ -11,11 +8,13 @@ import {
   getTotalSpaceUsed,
   getUsageSummary,
 } from "@/utils/helperFunc";
-import { useCallback } from "react";
+
 import RecentFileCard from "@/components/dashboard/RecentFileUploads";
-import { getAllFile } from "@/serverFn/serverFn";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Rabbit } from "lucide-react";
+import { useAppData } from "@/utils/hook";
+import Loading from "@/components/Loading";
+import ErrorComp from "@/components/Error";
 
 export const Route = createFileRoute("/_layout/")({
   component: RouteComponent,
@@ -28,20 +27,16 @@ export const Route = createFileRoute("/_layout/")({
 function RouteComponent() {
   const { userId } = Route.useLoaderData();
 
-  const { data } = useQuery({
-    queryKey: ["allFiles"],
-    queryFn: async () => await getAllFile({ data: userId }),
-    staleTime: Infinity,
-  });
+  const { data, isLoading, isError } = useAppData({ userId });
 
-  const getTotalSpace = useCallback(getTotalSpaceUsed, [data]);
-  const getSpaceSummary = useCallback(getSpaceUsedSummary, [data]);
-
-  const spaceSummary = getSpaceSummary({ data: data! });
-  const totalSpaceUsed = getTotalSpace({ data: data! });
+  const spaceSummary = getSpaceUsedSummary({ data: data! });
+  const totalSpaceUsed = getTotalSpaceUsed({ data: data! });
 
   const cardSummary = getUsageSummary(spaceSummary);
   const recentFiles = getRecentFileUploaded({ data: data! });
+
+  if (isLoading) return <Loading />;
+  if (isError) return <ErrorComp />;
 
   return (
     <div className="mx-auto grid grid-cols-1 gap-6 lg:grid-cols-2 xl:gap-10">

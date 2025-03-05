@@ -37,27 +37,11 @@ export type RecentFileUplodedItem = {
 
 export type SORTING_OPTION = "newest" | "oldest";
 
-const AuthTypeSchema = z.enum(["sign-up", "sign-in"]);
-export type AuthType = z.infer<typeof AuthTypeSchema>;
-
-const SignUpSchema = z.object({
+export const AuthSchema = z.object({
   email: z.string().email().nonempty({ message: "Email should be provided" }),
 });
 
-const SignInSchema = z.object({
-  email: z.string().email().nonempty({ message: "Email should be provided" }),
-});
-
-export type SignUp = z.infer<typeof SignUpSchema>;
-export type SignIn = z.infer<typeof SignInSchema>;
-
-export const getAuthSchema = (authType: AuthType) => {
-  if (authType === "sign-up") {
-    return SignUpSchema;
-  } else {
-    return SignInSchema;
-  }
-};
+export type AuthSchemaType = z.infer<typeof AuthSchema>;
 
 export const OTPSchema = z.object({
   pin: z.string().min(6, {

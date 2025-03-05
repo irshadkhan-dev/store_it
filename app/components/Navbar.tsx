@@ -4,6 +4,7 @@ import { cn } from "@/utils/helperFunc";
 
 import SidebarMobile from "@/components/SidebarMobile";
 import UploadBtn from "@/components/UploadBtn";
+import { Link } from "@tanstack/react-router";
 
 const Navbar = ({
   setDropZoneActive,
@@ -33,10 +34,12 @@ const Navbar = ({
       <div className="flex w-full flex-row items-center justify-between space-x-10">
         <div className="flex flex-row items-center space-x-16">
           <div className="flex items-center space-x-2">
-            <span className="text-2xl font-semibold text-[#FA7275] flex items-end">
-              <Rabbit className="h-10 w-10" />
-              <span className="">Store_It</span>
-            </span>
+            <Link to="/">
+              <span className="text-2xl font-semibold text-[#FA7275] flex items-end">
+                <Rabbit className="h-10 w-10" />
+                <span className="">Store_It</span>
+              </span>
+            </Link>
           </div>
 
           <div className="hidden w-96 items-center space-x-1 rounded-2xl p-2 shadow-xl md:flex">

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSignUp } from "@clerk/tanstack-start";
 import { useNavigate } from "@tanstack/react-router";
 
-import { AuthType, getAuthSchema, SignUp } from "@/types/auth";
+import { AuthSchema, AuthSchemaType } from "@/types/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
@@ -13,21 +13,20 @@ import { Form, FormControl, FormField } from "@/components/ui/form";
 import { Github, Google } from "@/utils/icons";
 
 const AuthPage = () => {
-  const [authType, setAuthType] = useState<AuthType>("sign-up");
   const [isVerifying, setVerifying] = useState(false);
 
   const { isLoaded, signUp, setActive } = useSignUp();
   const router = useNavigate({ from: "/" });
 
-  const formSchema = getAuthSchema(authType!);
-  const form = useForm<SignUp>({
+  const formSchema = AuthSchema;
+  const form = useForm<AuthSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
     },
   });
 
-  const onSubmit = async (data: SignUp) => {
+  const onSubmit = async (data: AuthSchemaType) => {
     if (!isLoaded && !signUp) return null;
 
     try {
@@ -70,6 +69,7 @@ const AuthPage = () => {
           loading: "Verifying the provided code...",
           success: () => {
             router({ to: "/" });
+            return "";
           },
           error: <b>The given code in incorrect!</b>,
         }
@@ -115,41 +115,37 @@ const AuthPage = () => {
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                   <div className="w-full flex flex-col space-y-8">
-                    {authType === "sign-up" ? (
-                      <>
-                        <h2 className="md:text-4xl text-2xl font-semibold">
-                          Create Account
-                        </h2>
+                    <>
+                      <h2 className="md:text-4xl text-2xl font-semibold">
+                        Create Account
+                      </h2>
 
-                        <div className="w-full">
-                          <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field, fieldState }) => (
-                              <FormControl>
-                                <div>
-                                  <input
-                                    {...field}
-                                    className="border-gray-500 border-[2px] py-2 w-full rounded-lg px-4 shadow-xl outline-none"
-                                    placeholder="Valid email"
-                                  />
-                                  {fieldState.error?.message && (
-                                    <span className="mt-2 text-red-500 text-sm font-semibold">
-                                      {fieldState.error.message}
-                                    </span>
-                                  )}
-                                </div>
-                              </FormControl>
-                            )}
-                          />
-                        </div>
-                      </>
-                    ) : (
-                      <></>
-                    )}
+                      <div className="w-full">
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={({ field, fieldState }) => (
+                            <FormControl>
+                              <div>
+                                <input
+                                  {...field}
+                                  className="border-gray-500 border-[2px] py-2 w-full rounded-lg px-4 shadow-xl outline-none"
+                                  placeholder="Valid email"
+                                />
+                                {fieldState.error?.message && (
+                                  <span className="mt-2 text-red-500 text-sm font-semibold">
+                                    {fieldState.error.message}
+                                  </span>
+                                )}
+                              </div>
+                            </FormControl>
+                          )}
+                        />
+                      </div>
+                    </>
 
                     <button className="w-full bg-[#FA7275] text-white font-semibold text-xl py-2.5 rounded-xl cursor-pointer">
-                      {authType === "sign-up" ? "Create Account" : "Login"}
+                      Create Account
                     </button>
                   </div>
                 </form>
@@ -158,7 +154,7 @@ const AuthPage = () => {
             <div className="text-3xl font-bold text-center font-[italic]">
               Or,
             </div>
-            <div className="flex max-md:flex-col space-y-4 justify-center space-x-16">
+            <div className="flex flex-col md:flex-row md:items-center  justify-center max-md:space-y-4 space-x-16">
               <SignUpBtn
                 provider="oauth_google"
                 providerName="Google"

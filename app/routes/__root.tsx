@@ -1,4 +1,4 @@
-import { Meta, Scripts } from "@tanstack/start";
+import { Scripts, HeadContent } from "@tanstack/react-router";
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { QueryClient } from "@tanstack/react-query";
@@ -31,6 +31,7 @@ export const Route = createRootRouteWithContext<{
         rel: "stylesheet",
         href: appCss,
       },
+      { rel: "icon", href: "/favicon.ico" },
     ],
   }),
 
@@ -51,7 +52,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
     <ClerkProvider>
       <html>
         <head>
-          <Meta />
+          <HeadContent />
         </head>
 
         <body>

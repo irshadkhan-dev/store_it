@@ -1,6 +1,6 @@
 import db from "@/db";
 import { filesTable } from "@/db/schema";
-import { createServerFn } from "@tanstack/start";
+import { createServerFn } from "@tanstack/react-start";
 import { desc, eq } from "drizzle-orm";
 
 export const getAllFile = createServerFn({ method: "GET" })

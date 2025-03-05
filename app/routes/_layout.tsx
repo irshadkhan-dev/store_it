@@ -2,14 +2,14 @@ import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 
 import UploadDropzone from "@/components/UploadDropzone";
-
-import { getAllFile } from "@/serverFn/serverFn";
+import { DB_FileType } from "@/db/schema";
 
 import { getAuth } from "@clerk/tanstack-start/server";
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/start";
 
-import { useState } from "react";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+
+import { createContext, useState } from "react";
 import { getWebRequest } from "vinxi/http";
 
 const authStateFn = createServerFn({ method: "GET" }).handler(async () => {
@@ -33,20 +33,15 @@ export const Route = createFileRoute("/_layout")({
   component: RouteComponent,
   loader: async ({ context }) => {
     const { userId } = context;
-    await context.queryClient.prefetchQuery({
-      queryKey: ["allFiles"],
-      queryFn: async () => await getAllFile({ data: userId }),
-      staleTime: Infinity,
-    });
     return { userId };
   },
-  staleTime: Infinity,
 });
+
+export const AppDataContext = createContext<DB_FileType[] | null>(null);
 
 function RouteComponent() {
   const { userId } = Route.useLoaderData();
   if (!userId) return null;
-
   const [dropZoneActive, setDropZoneActive] = useState(false);
 
   return (

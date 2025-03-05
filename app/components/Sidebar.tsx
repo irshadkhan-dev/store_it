@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { SidebarFolderData } from "../utils/data";
 import SidebarFolderBtn from "./SidebarFolderBtn";
-import { createServerFn } from "@tanstack/start";
+import { createServerFn } from "@tanstack/react-start";
 import { clerkClient } from "@clerk/tanstack-start/server";
 
 import { useQuery } from "@tanstack/react-query";

@@ -216,7 +216,7 @@ export const getRelevantFile = ({
     (curFile) => curFile.fileType === fileType
   );
 
-  const relevantFileSortedByPage = relevantFileByPage.sort((a, b) =>
+  const relevantFileSortedByPage = relevantFileByPage?.sort((a, b) =>
     sortBy === "newest"
       ? b.createdAt.getTime() - a.createdAt.getTime()
       : a.createdAt.getTime() - b.createdAt.getTime()
@@ -242,7 +242,7 @@ export const getUsageSummary = (
       size: spaceSummary?.image?.size || 0,
       lastUpdated: spaceSummary?.image?.lastUpdated || new Date(0),
       icon: Images,
-      url: "/images",
+      url: "/image",
       iconBgColor: "#56B8FF",
     },
     {

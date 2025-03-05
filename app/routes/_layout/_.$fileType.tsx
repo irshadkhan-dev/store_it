@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import {
@@ -8,17 +7,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import {
   convertFileSize,
   getFileIconByExtention,
   getRelevantFile,
   getSpaceUsedSummary,
 } from "@/utils/helperFunc";
-import { getAllFile } from "@/serverFn/serverFn";
+
 import { SORTING_OPTION } from "@/types/auth";
 import FileCard from "@/components/FileCard";
 import { Rabbit } from "lucide-react";
+import { useAppData } from "@/utils/hook";
 
 export const Route = createFileRoute("/_layout/_/$fileType")({
   component: RouteComponent,
@@ -30,13 +30,8 @@ export const Route = createFileRoute("/_layout/_/$fileType")({
 
 function RouteComponent() {
   const { params, userId } = Route.useLoaderData();
+  const { data } = useAppData({ userId });
   const [sortingOption, setSortingOptions] = useState<SORTING_OPTION>("newest");
-
-  const { data } = useQuery({
-    queryKey: ["allFiles"],
-    queryFn: async () => await getAllFile({ data: userId }),
-    staleTime: Infinity,
-  });
 
   const relavantFile = getRelevantFile({
     data: data!,
@@ -46,6 +41,7 @@ function RouteComponent() {
 
   const totalSpaceUsed = getSpaceUsedSummary({ data: data! });
   const totalSpace = convertFileSize(totalSpaceUsed[params.fileType]?.size);
+
   return (
     <div className="h-full flex flex-col space-y-4">
       <div>
